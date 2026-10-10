@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,6 +52,28 @@ class Product extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Only products that are visible in the shop.
+     *
+     * @param  Builder<$this>  $query
+     */
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
+
+    /**
+     * Only products that can currently be bought.
+     *
+     * @param  Builder<$this>  $query
+     */
+    #[Scope]
+    protected function inStock(Builder $query): void
+    {
+        $query->where('stock', '>', 0);
     }
 
     /**
