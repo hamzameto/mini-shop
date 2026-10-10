@@ -6,7 +6,9 @@ namespace App\Models;
 
 use App\Enums\OrderStatus;
 use Carbon\CarbonImmutable;
+use Database\Factories\OrderFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,6 +30,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['user_id', 'email', 'name', 'street', 'zip', 'city', 'status', 'total_cents', 'placed_at'])]
 class Order extends Model
 {
+    /** @use HasFactory<OrderFactory> */
+    use HasFactory;
+
     /**
      * Default values for a new order, matching the column defaults.
      *

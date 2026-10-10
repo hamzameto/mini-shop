@@ -6,9 +6,9 @@ Complete the phases in order. Each phase lists the concepts it teaches and the s
 
 - **Last update:** 2026-10-10
 - **Done:** Phase 0 (committed and pushed to `main`)
-- **In progress:** Phase 1 (enums, migrations, models and scopes done)
-- **Next:** Phase 1, factories with states (`outOfStock()`, `admin()`)
-- **Checks at last commit:** 62 Pest tests passing, Pint clean, Larastan level 7 with 0 errors
+- **In progress:** Phase 1 (enums, migrations, models, scopes and factories done)
+- **Next:** Phase 1, seeder: 1 admin, 5 customers, 6 categories, ~40 products, ~15 orders
+- **Checks at last commit:** 70 Pest tests passing, Pint clean, Larastan level 7 with 0 errors
 
 | Phase | Topic | Concepts |
 |---|---|---|
@@ -58,7 +58,7 @@ Steps:
 - [x] Migrations with foreign keys, indexes and `onDelete` rules
 - [x] Models with casts and relations
 - [x] Scopes `Product::active()`, `Product::inStock()`
-- [ ] Factories with states (`outOfStock()`, `admin()`)
+- [x] Factories with states (`outOfStock()`, `admin()`)
 - [ ] Seeder: 1 admin, 5 customers, 6 categories, ~40 products, ~15 orders
 - [ ] Tests for relations, scopes and casts
 - [ ] Explain eager vs. lazy loading and the N+1 problem with a Tinker example

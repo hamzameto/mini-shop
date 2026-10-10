@@ -8,7 +8,7 @@ Work through `ROADMAP.md` phase by phase. Tick each checkbox when it's done.
 
 ## Current status
 
-- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Phase 1 (data model) is in progress:** the enums, migrations, models and scopes are done, next are the factories.
+- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Phase 1 (data model) is in progress:** the enums, migrations, models, scopes and factories are done, next is the seeder.
 - At the start of a session, read the "Status" block at the top of `ROADMAP.md` to see where we are, then continue with the first unticked checkbox.
 - When a phase or step is finished, update the status here and in `ROADMAP.md` in the same step.
 

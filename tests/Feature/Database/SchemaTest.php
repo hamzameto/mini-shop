@@ -2,33 +2,29 @@
 
 declare(strict_types=1);
 
-use App\Models\User;
+use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Insert a category with one product and return the product id.
- */
-function insertProduct(): int
-{
-    $categoryId = DB::table('categories')->insertGetId(['name' => 'Books', 'slug' => 'books']);
+test('column defaults are applied by the database', function () {
+    $userId = DB::table('users')->insertGetId([
+        'name' => 'Test User',
+        'email' => 'user@example.com',
+        'password' => 'hashed',
+    ]);
 
-    return DB::table('products')->insertGetId([
-        'category_id' => $categoryId,
+    $productId = DB::table('products')->insertGetId([
+        'category_id' => Category::factory()->create()->id,
         'name' => 'Novel',
         'slug' => 'novel',
         'description' => 'A novel.',
         'price_cents' => 1299,
     ]);
-}
 
-/**
- * Insert an order and return its id.
- */
-function insertOrder(?int $userId = null): int
-{
-    return DB::table('orders')->insertGetId([
-        'user_id' => $userId,
+    $orderId = DB::table('orders')->insertGetId([
         'email' => 'buyer@example.com',
         'name' => 'Test Buyer',
         'street' => 'Main Street 1',
@@ -37,70 +33,45 @@ function insertOrder(?int $userId = null): int
         'total_cents' => 1299,
         'placed_at' => now(),
     ]);
-}
 
-/**
- * Insert an order item and return its id.
- */
-function insertOrderItem(int $orderId, int $productId): int
-{
-    return DB::table('order_items')->insertGetId([
-        'order_id' => $orderId,
-        'product_id' => $productId,
-        'product_name' => 'Novel',
-        'unit_price_cents' => 1299,
-        'quantity' => 1,
-    ]);
-}
+    $product = DB::table('products')->find($productId);
 
-test('column defaults are applied', function () {
-    $user = User::factory()->create();
-    $product = DB::table('products')->find(insertProduct());
-    $order = DB::table('orders')->find(insertOrder());
-
-    expect(DB::table('users')->where('id', $user->id)->value('role'))->toBe('customer')
+    expect(DB::table('users')->where('id', $userId)->value('role'))->toBe('customer')
         ->and($product->stock)->toBe(0)
         ->and($product->is_active)->toBeTrue()
-        ->and($order->status)->toBe('pending');
+        ->and(DB::table('orders')->where('id', $orderId)->value('status'))->toBe('pending');
 });
 
 test('a category with products cannot be deleted', function () {
-    $categoryId = DB::table('products')->where('id', insertProduct())->value('category_id');
+    $product = Product::factory()->create();
 
-    DB::table('categories')->where('id', $categoryId)->delete();
+    $product->category->delete();
 })->throws(QueryException::class);
 
 test('a product slug must be unique', function () {
-    insertProduct();
-    insertProduct();
+    Product::factory()->count(2)->create(['slug' => 'novel']);
 })->throws(QueryException::class);
 
 test('deleting a user keeps the order without a user', function () {
-    $user = User::factory()->create();
-    $orderId = insertOrder($user->id);
+    $order = Order::factory()->create();
 
-    $user->delete();
+    $order->user->delete();
 
-    expect(DB::table('orders')->where('id', $orderId)->value('user_id'))->toBeNull();
+    expect($order->fresh()->user_id)->toBeNull();
 });
 
-test('deleting a product keeps the order item with its snapshot', function () {
-    $productId = insertProduct();
-    $itemId = insertOrderItem(insertOrder(), $productId);
+test('deleting a product keeps the order item', function () {
+    $item = OrderItem::factory()->create();
 
-    DB::table('products')->where('id', $productId)->delete();
+    $item->product->delete();
 
-    $item = DB::table('order_items')->find($itemId);
-
-    expect($item->product_id)->toBeNull()
-        ->and($item->product_name)->toBe('Novel');
+    expect($item->fresh()->product_id)->toBeNull();
 });
 
 test('deleting an order deletes its items', function () {
-    $orderId = insertOrder();
-    insertOrderItem($orderId, insertProduct());
+    $item = OrderItem::factory()->create();
 
-    DB::table('orders')->where('id', $orderId)->delete();
+    $item->order->delete();
 
-    expect(DB::table('order_items')->count())->toBe(0);
+    expect(OrderItem::count())->toBe(0);
 });

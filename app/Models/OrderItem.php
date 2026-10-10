@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Carbon\CarbonImmutable;
+use Database\Factories\OrderItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,6 +24,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['order_id', 'product_id', 'product_name', 'unit_price_cents', 'quantity'])]
 class OrderItem extends Model
 {
+    /** @use HasFactory<OrderItemFactory> */
+    use HasFactory;
+
     /**
      * @return BelongsTo<Order, $this>
      */
