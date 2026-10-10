@@ -6,6 +6,12 @@
 
 Work through `ROADMAP.md` phase by phase. Tick each checkbox when it's done.
 
+## Current status
+
+- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Next: Phase 1 (data model).**
+- At the start of a session, read the "Status" block at the top of `ROADMAP.md` to see where we are, then continue with the first unticked checkbox.
+- When a phase or step is finished, update the status here and in `ROADMAP.md` in the same step.
+
 ## Scope of your role
 
 - Your job is to write the project's code, tests, config files and docs, and to explain them.
@@ -26,7 +32,7 @@ The project must cost nothing. Use only free and open-source tools and free tier
   git push
   ```
 - Use Conventional Commits (`feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `ci`) with a short, specific message.
-- Before the first commit in Phase 0, give the one-time setup commands (`git init`, `git branch -M main`, `git remote add origin <repo-url>`, `git push -u origin main`) and tell him to create the empty GitHub repo first.
+- The repository is already initialised and connected to GitHub (`origin`, branch `main`). No one-time setup commands are needed any more.
 - **The secret check is your job, not the developer's.** Before giving the commit commands, run `git status` and `git diff` yourself (read-only) and confirm that:
   - no `.env` or `.env.*` file (except `.env.example`) would be committed,
   - no password, key or token appears in any changed file outside `.env`.
@@ -56,14 +62,34 @@ The project must cost nothing. Use only free and open-source tools and free tier
 
 Check the current stable versions at the start and use them.
 
-- **Local environment (Windows, no WSL/Ubuntu):** PHP, Composer, Node.js and Git are installed directly on Windows. The app runs with `php artisan serve`. PostgreSQL and Mailpit run in Docker Desktop via a small `docker-compose.yml` (only these two services, not the app). Do not use Laravel Sail or Herd. In Phase 0, check that the PHP version meets Laravel's requirement and that the `pdo_pgsql` and `pgsql` extensions are enabled in `php.ini`.
+- **Local environment (Windows, no WSL/Ubuntu):** PHP, Composer, Node.js and Git are installed directly on Windows. The app runs with `php artisan serve`. PostgreSQL and Mailpit run in Docker Desktop via a small `docker-compose.yml` (only these two services, not the app). Do not use Laravel Sail or Herd. PHP is at `C:\php`; `pdo_pgsql`, `pgsql`, `fileinfo` and `zip` are enabled in `C:\php\php.ini`.
 - **Terminal:** the developer uses Git Bash in VS Code on Windows. Every command you give him must work in Git Bash.
-- **Project location:** the Laravel project lives in the repository root, the folder that already contains `CLAUDE.md` and `ROADMAP.md`. The Laravel installer needs an empty folder, so create the project in a temporary subfolder (using non-interactive flags), move everything into the root, keep `CLAUDE.md` and `ROADMAP.md`, then delete the temporary folder.
-- **Backend:** PHP 8.x, Laravel, PostgreSQL (local in Docker; live demo on Neon), Laravel Sanctum, database queue, Mailpit
-- **Frontend:** official Laravel Vue starter kit (Inertia, Vue 3 `<script setup lang="ts">`, TypeScript, Tailwind, Vite)
-- **Quality:** Pest, Vitest + Vue Test Utils, Laravel Pint, Larastan, GitHub Actions
+- **Project location:** the Laravel project lives in the repository root, next to `CLAUDE.md` and `ROADMAP.md`.
+- **Backend:** PHP 8.5, Laravel 13, PostgreSQL 18 (local in Docker; live demo on Neon), Laravel Sanctum (not installed yet, Phase 6), database queue, Mailpit
+- **Frontend:** official Laravel Vue starter kit (Inertia 3, Vue 3.5 `<script setup lang="ts">`, TypeScript, Tailwind 4, Vite 8)
+- **Quality:** Pest 5, Vitest + Vue Test Utils (not installed yet, Phase 7), Laravel Pint, Larastan (level 7), GitHub Actions
 
 Use PostgreSQL in all environments (local, tests, CI, production).
+
+### What is already set up (Phase 0)
+
+- **Database port is 5433, not 5432.** A native Windows PostgreSQL service already uses 5432 on this machine, so the Docker database is published on host port 5433 (`DB_PORT=5433` in `.env` and `.env.example`). Do not stop or change the Windows service.
+- **Databases:** `mini_shop` (development) and `mini_shop_testing` (tests), both in the same container. The test database is created by `docker/postgres/create-test-database.sql` on the container's first start. `phpunit.xml` sets `DB_CONNECTION=pgsql` and `DB_DATABASE=mini_shop_testing`; host, user and password come from `.env`.
+- **`docker-compose.yml`** reads the database name, user and password from `.env`. It contains no credentials.
+- **Tests:** `tests/Pest.php` applies `TestCase` and `RefreshDatabase` to everything in `tests/Feature`. Do not add `uses(RefreshDatabase::class)` to single test files. Unit tests do not touch the database.
+- **Starter kit specifics:**
+  - Authentication comes from Laravel Fortify. There are no auth controllers in `app/`; `app/Providers/FortifyServiceProvider.php` maps each auth screen to a Vue page in `resources/js/pages/auth`.
+  - Laravel Wayfinder generates typed route helpers into `resources/js/routes` and `resources/js/actions` (gitignored, regenerated by Vite). In Vue, import these helpers instead of hard-coding URLs.
+  - Layouts are chosen by page name in `resources/js/app.ts` (`AuthLayout` for `auth/*`, `AppLayout` plus settings layout for `settings/*`, `AppLayout` otherwise).
+  - `resources/js/components/ui` holds ready-made shadcn-vue components. Use them, do not edit them.
+  - npm scripts use Vite+ (`vp`): `npm run dev`, `npm run build`, `npm run check` (lint and format), `npm run types:check`.
+- **CI:** the starter kit's `.github/workflows/tests.yml` is set to manual trigger only (`workflow_dispatch`) because it targets SQLite. Phase 8 replaces it with the real workflow.
+- **Docs:** `docs/request-lifecycle.md` explains the request lifecycle with this project's files.
+
+### Running commands yourself (agent shell)
+
+- Always pass `--no-interaction` and close stdin (`< /dev/null`) for artisan, composer and pest commands. Without it they can wait forever on a prompt.
+- The `laravel/pao` package detects an AI agent and shortens test, Pint and Larastan output to one JSON line. That is expected. Set `PAO_DISABLE=1` when the full output is needed.
 
 ## Conventions
 
@@ -104,7 +130,9 @@ composer stan                        # Larastan (composer script)
 php artisan queue:work
 php artisan serve                    # app at http://localhost:8000
 npm run dev
-npm run test                         # Vitest
+npm run check                        # frontend lint + format check
+npm run types:check                  # vue-tsc
+npm run test                         # Vitest (added in Phase 7)
 ```
 
 App: http://localhost:8000

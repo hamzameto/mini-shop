@@ -2,6 +2,13 @@
 
 Complete the phases in order. Each phase lists the concepts it teaches and the steps to build.
 
+## Status
+
+- **Last update:** 2026-10-10
+- **Done:** Phase 0 (committed and pushed to `main`)
+- **Next:** Phase 1, first step: enums `UserRole` and `OrderStatus`
+- **Checks at last commit:** 40 Pest tests passing, Pint clean, Larastan level 7 with 0 errors
+
 | Phase | Topic | Concepts |
 |---|---|---|
 | 0 | Setup and tour | Docker Compose, project structure, request lifecycle, Inertia, Pint, Larastan |
@@ -29,6 +36,12 @@ Complete the phases in order. Each phase lists the concepts it teaches and the s
 - [x] Explain each top-level folder and the starter-kit files (auth pages, layouts, `HandleInertiaRequests`)
 - [x] Explain the request lifecycle: browser → `public/index.php` → routing → middleware → controller → Inertia → Vue page. Write it down in `docs/request-lifecycle.md`
 - [x] Run and explain the starter-kit tests
+
+Notes from Phase 0:
+- Installed versions: PHP 8.5, Laravel 13, Inertia 3, Vue 3.5, Vite 8, Tailwind 4, Pest 5, Pint 1.32, Larastan 3, PostgreSQL 18.
+- The Docker database uses host port 5433, because a Windows PostgreSQL service already uses 5432.
+- The starter kit already has a `users` table with two-factor columns, a `passkeys` table, and Fortify authentication. Phase 1 adds the `role` column to `users` with a new migration.
+- The starter kit's tests were converted from PHPUnit to Pest.
 
 ## Phase 1: Data model
 
@@ -109,7 +122,7 @@ Steps:
 
 Claude Code writes the files below. The developer sets up Neon and Render, adds the environment variables and deploys himself. Everything must work on the **free tiers** of Render and Neon.
 
-- [ ] GitHub Actions workflow: Pint, Larastan, Pest (PostgreSQL service), frontend build, Vitest
+- [ ] GitHub Actions workflow: Pint, Larastan, Pest (PostgreSQL service), frontend build, Vitest. Replace the starter kit's `.github/workflows/tests.yml`, which is set to manual trigger only since Phase 0, and turn the push / pull request triggers back on
 - [ ] `Dockerfile` for Render's free web service (PHP, built frontend assets, migrations on start)
 - [ ] Free-tier production settings: `QUEUE_CONNECTION=sync` (no paid worker), `MAIL_MAILER=log` (no paid mail service), PostgreSQL SSL settings for Neon
 - [ ] Trusted proxies configured, so HTTPS URLs and assets work behind Render's proxy
