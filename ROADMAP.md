@@ -5,9 +5,8 @@ Complete the phases in order. Each phase lists the concepts it teaches and the s
 ## Status
 
 - **Last update:** 2026-10-10
-- **Done:** Phase 0 (committed and pushed to `main`)
-- **In progress:** Phase 1 (everything done except the last step)
-- **Next:** Phase 1, last step: explain eager vs. lazy loading and the N+1 problem with a Tinker example
+- **Done:** Phase 0 and Phase 1
+- **Next:** Phase 2, first step: `ProductController@index` / `@show` with slug route binding
 - **Checks at last commit:** 75 Pest tests passing, Pint clean, Larastan level 7 with 0 errors
 
 | Phase | Topic | Concepts |
@@ -61,7 +60,14 @@ Steps:
 - [x] Factories with states (`outOfStock()`, `admin()`)
 - [x] Seeder: 1 admin, 5 customers, 6 categories, ~40 products, ~15 orders
 - [x] Tests for relations, scopes and casts
-- [ ] Explain eager vs. lazy loading and the N+1 problem with a Tinker example
+- [x] Explain eager vs. lazy loading and the N+1 problem with a Tinker example
+
+Notes from Phase 1:
+- All dates are `CarbonImmutable` (set by the starter kit's `AppServiceProvider`).
+- `role` is not mass assignable on `User`; set it explicitly or through the `admin()` factory state.
+- Extra factory states beyond the plan: `Product::factory()->inactive()` and `Order::factory()->guest()`.
+- Seed logins: `admin@example.com` and `customer@example.com`, both with the factory's default password.
+- Measured on the seed data: listing 42 products with their category takes 43 queries lazily and 2 with `with('category')`.
 
 ## Phase 2: Product catalogue
 
