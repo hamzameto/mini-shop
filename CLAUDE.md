@@ -8,7 +8,8 @@ Work through `ROADMAP.md` phase by phase. Tick each checkbox when it's done.
 
 ## Current status
 
-- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Phase 1 (data model) is in progress:** the enums, migrations, models, scopes and factories are done, next is the seeder.
+- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Phase 1 (data model) is in progress:** everything is done except the last step, the eager vs. lazy loading (N+1) explanation with Tinker.
+- **Seed data:** `php artisan db:seed` creates `admin@example.com` (admin) and `customer@example.com` (customer), both with the factory's default password, plus 6 categories, 42 products and 15 orders.
 - At the start of a session, read the "Status" block at the top of `ROADMAP.md` to see where we are, then continue with the first unticked checkbox.
 - When a phase or step is finished, update the status here and in `ROADMAP.md` in the same step.
 
