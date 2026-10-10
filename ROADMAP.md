@@ -6,9 +6,9 @@ Complete the phases in order. Each phase lists the concepts it teaches and the s
 
 - **Last update:** 2026-10-10
 - **Done:** Phase 0 (committed and pushed to `main`)
-- **In progress:** Phase 1 (enums done)
-- **Next:** Phase 1, migrations with foreign keys, indexes and `onDelete` rules
-- **Checks at last commit:** 43 Pest tests passing, Pint clean, Larastan level 7 with 0 errors
+- **In progress:** Phase 1 (enums and migrations done)
+- **Next:** Phase 1, models with casts and relations
+- **Checks at last commit:** 49 Pest tests passing, Pint clean, Larastan level 7 with 0 errors
 
 | Phase | Topic | Concepts |
 |---|---|---|
@@ -55,7 +55,7 @@ Tables:
 
 Steps:
 - [x] Enums `UserRole`, `OrderStatus` (`pending`, `paid`, `shipped`, `cancelled`)
-- [ ] Migrations with foreign keys, indexes and `onDelete` rules
+- [x] Migrations with foreign keys, indexes and `onDelete` rules
 - [ ] Models with casts and relations
 - [ ] Scopes `Product::active()`, `Product::inStock()`
 - [ ] Factories with states (`outOfStock()`, `admin()`)
