@@ -8,7 +8,7 @@ Work through `ROADMAP.md` phase by phase. Tick each checkbox when it's done.
 
 ## Current status
 
-- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Next: Phase 1 (data model).**
+- **Phase 0 is complete and pushed** to `https://github.com/hamzameto/mini-shop.git` (branch `main`). **Phase 1 (data model) is in progress:** the enums are done, next are the migrations.
 - At the start of a session, read the "Status" block at the top of `ROADMAP.md` to see where we are, then continue with the first unticked checkbox.
 - When a phase or step is finished, update the status here and in `ROADMAP.md` in the same step.
 
@@ -88,7 +88,7 @@ Use PostgreSQL in all environments (local, tests, CI, production).
 
 ### Running commands yourself (agent shell)
 
-- Always pass `--no-interaction` and close stdin (`< /dev/null`) for artisan, composer and pest commands. Without it they can wait forever on a prompt.
+- Always pass `--no-interaction` and close stdin (`< /dev/null`) for artisan, composer and pest commands. Without it they can wait forever on a prompt. Exception: `php artisan test` passes unknown flags on to PHPUnit, so run it with `< /dev/null` only.
 - The `laravel/pao` package detects an AI agent and shortens test, Pint and Larastan output to one JSON line. That is expected. Set `PAO_DISABLE=1` when the full output is needed.
 
 ## Conventions
